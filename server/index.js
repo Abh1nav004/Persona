@@ -1,4 +1,3 @@
-// server/index.js
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -12,23 +11,13 @@ app.use(cors());
 app.use(express.json());
 
 // Database Connection
-const MONGODB_URI =  "mongodb://localhost:27017/persona"; // IMPORTANT: Replace with your actual MongoDB URI!
-mongoose.connect(MONGODB_URI, {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}).then(() => {
-  console.log('Connected to MongoDB');
-}).catch((err) => {
-  console.error('MongoDB connection error:', err);
-});
+}).then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error('DB Connection Error:', err));
 
-// Home route
-app.get("/", (req, res) => {
-  res.send("PERSONA Backend is running...");
-});
+app.use('/api/users', userRoutes);
 
-// Use user routes
-app.use("/users", userRoutes);
-
-const PORT =  5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
